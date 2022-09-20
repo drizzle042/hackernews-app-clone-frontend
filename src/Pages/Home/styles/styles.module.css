@@ -1,0 +1,13 @@
+.searchbar{
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem;
+}
+.pagination{
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    margin-left: -0.2rem;
+    min-width: 350px;
+}
