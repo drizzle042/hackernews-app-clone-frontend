@@ -41,7 +41,7 @@ const Search = ({handleSearchInput, buttonText, link}) => {
 
     return ( 
         <div className={styles.searchbar}>
-            <FormControl sx={{ m: 1, width: '100vw', maxWidth: "600px" }} variant="outlined" size="small">
+            <FormControl sx={{ m: 1, width: '90%', marginLeft: "auto", maxWidth: "600px" }} variant="outlined" size="small">
                 <InputLabel htmlFor="search">Search</InputLabel>
                 <OutlinedInput
                     id="search"
@@ -54,37 +54,42 @@ const Search = ({handleSearchInput, buttonText, link}) => {
                     label="Search"
                 />
             </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                <InputLabel id="demo-select-small">
-                    <Typography sx={{ minWidth: 100 }}>Story Type</Typography>
-                </InputLabel>
-                <Select
-                    labelId="demo-select-small"
-                    id="demo-select-small"
-                    value={storyType}
-                    label="Story Type"
-                    onChange={handleSelect}
-                >
-                    <MenuItem value="all">All</MenuItem>
-                    <MenuItem value="story">Posts</MenuItem>
-                    <MenuItem value="ask">Questions</MenuItem>
-                    <MenuItem value="job">Jobs</MenuItem>
-                </Select>
-            </FormControl>
-            <Tooltip title="Get only your own posts">
-                <Link to={link} style={{color: "#fff"}}><Button 
-                variant="contained" 
-                type="button"
-                size="large"
-                sx={{
-                    minWidth: 120,
-                    marginTop: "auto",
-                    marginBottom: "auto"
-                }}
-                endIcon={<AccountBoxIcon />}>
-                    <Typography>{buttonText}</Typography>
-                </Button></Link>
-            </Tooltip>
+            <div className={styles.flex}>
+                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                    <InputLabel id="demo-select-small">
+                        <Typography sx={{ minWidth: 100 }}>Story Type</Typography>
+                    </InputLabel>
+                    <Select
+                        labelId="demo-select-small"
+                        id="demo-select-small"
+                        value={storyType}
+                        label="Story Type"
+                        onChange={handleSelect}
+                    >
+                        <MenuItem value="all">All</MenuItem>
+                        <MenuItem value="story">Posts</MenuItem>
+                        <MenuItem value="ask">Questions</MenuItem>
+                        <MenuItem value="job">Jobs</MenuItem>
+                    </Select>
+                </FormControl>
+                <Tooltip title="Get only your own posts">
+                    <Link to={link} style={{color: "#fff"}}>
+                        <Button 
+                        variant="contained" 
+                        type="button"
+                        size="large"
+                        sx={{
+                            minWidth: 120,
+                            marginTop: "auto",
+                            marginBottom: "auto",
+                            textTransform: "none"
+                        }}
+                        endIcon={<AccountBoxIcon />}>
+                            <Typography>{buttonText}</Typography>
+                        </Button>
+                    </Link>
+                </Tooltip>
+            </div>
         </div>
      );
 }

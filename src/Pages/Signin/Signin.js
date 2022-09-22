@@ -93,7 +93,10 @@ const Signin = () => {
                     <Button 
                     variant="text"
                     onClick={handleSetSignMode}
-                    sx={{fontWeight: "bold"}}>
+                    sx={{
+                        fontWeight: "bold", 
+                        textTransform: "none"
+                    }}>
                         Signin 
                     </Button>
                 </Typography>
@@ -116,7 +119,7 @@ const Signin = () => {
                         <div className={styles.form}>
                             <div className={styles.row}>
                                 <TextField
-                                id="filled-required"
+                                required
                                 label="First Name"
                                 variant="outlined"
                                 placeholder="Your First Name"
@@ -131,7 +134,7 @@ const Signin = () => {
                                 }}
                                 />
                                 <TextField
-                                id="outlined-multiline-static"
+                                required
                                 label="Last Name"
                                 variant="outlined"
                                 multiline
@@ -150,7 +153,6 @@ const Signin = () => {
                             <div className={styles.row}>
                                 <TextField
                                 required
-                                id="filled-required"
                                 label="Email"
                                 type={"email"}
                                 variant="outlined"
@@ -169,7 +171,6 @@ const Signin = () => {
                             <div className={styles.row}>
                                 <TextField
                                 required
-                                id="filled-required"
                                 label="Password"
                                 type={showPassword ? "text" : "password"}
                                 variant="outlined"
@@ -226,7 +227,10 @@ const Signin = () => {
                     <Button 
                     variant="text"
                     onClick={handleSetSignMode}
-                    sx={{fontWeight: "bold"}}>
+                    sx={{
+                        fontWeight: "bold", 
+                        textTransform: "none"
+                    }}>
                         Sign Up
                     </Button>
                 </Typography>
@@ -250,7 +254,6 @@ const Signin = () => {
                             <div className={styles.row}>
                                 <TextField
                                 required
-                                id="filled-required"
                                 label="Email"
                                 type={"email"}
                                 variant="outlined"
@@ -269,7 +272,6 @@ const Signin = () => {
                             <div className={styles.row}>
                                 <TextField
                                 required
-                                id="filled-required"
                                 label="Password"
                                 type={showPassword ? "text" : "password"}
                                 variant="outlined"

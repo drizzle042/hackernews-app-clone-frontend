@@ -1,11 +1,8 @@
-import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import styles from "./styles/styles.module.css";
 import Tooltip from '@mui/material/Tooltip';
 import Layout from "../Layout/Layout";
-import Box from '@mui/material/Box';
-import TextField from "@mui/material/TextField"
 import Card from '@mui/material/Card';
 import CardHeader from '@mui/material/CardHeader';
 import CardContent from '@mui/material/CardContent';
@@ -19,7 +16,6 @@ import IconButton from '@mui/material/IconButton';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Typography from '@mui/material/Typography';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import AddCommentIcon from '@mui/icons-material/AddComment';
 import CommentIcon from '@mui/icons-material/Comment';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PreviewIcon from '@mui/icons-material/Preview';
@@ -78,18 +74,16 @@ const SingleArticle = () => {
             }
     }
 
-    const [displayCommentField, setDisplayCommentField] = useState(false);
-    function handleDisplay(){
-        setDisplayCommentField(!displayCommentField)
-    };
 
     const { id } = useParams();
     const navigate = useNavigate()
 
     // Requests
     const {data, isLoading, error} = useFetch(`api/v0/comments?commentid=${id}`)
-    const parent = data?.data?.parent
-    const comments = data?.data?.comments?.filter((i) => !i?.dead && !i?.deleted);
+    const parent = data?.data?.parent[0]
+    const allComments = data?.data?.comments;
+    const comments = allComments?.filter((i) => !i?.dead && !i?.deleted);
+    const filteredComments = allComments?.length - comments?.length
 
 
     return ( 
@@ -110,69 +104,36 @@ const SingleArticle = () => {
                 <Card 
                 sx={{margin: "auto", marginTop: "1rem", borderRadius: "10px", maxWidth: "500px"}} 
                 >
-                <CardHeader
-                    avatar={
-                    <Avatar {...stringAvatar(parent?.by)} />
-                    }
-                    title={parent?.by}
-                    subheader={new Date(parent?.time * 1000)?.toDateString()}
-                />
-                <CardContent>
-                    <Typography variant="body2" color="text.secondary" dangerouslySetInnerHTML={{ __html: parent?.title}} />
-                </CardContent>
-                <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                        <FavoriteIcon  sx={{color: "crimson"}}/>
-                    </IconButton> <Typography>{parent?.score}</Typography>
-                    <Tooltip title="Add comment">
-                    <IconButton aria-label="comment"
-                    onClick={handleDisplay}>
-                        <CommentIcon />
-                    </IconButton></Tooltip> <Typography>{comments?.length}</Typography>
-                </CardActions>
-              {parent?.text && 
-                <Accordion>
-                  <AccordionSummary
-                    expandIcon={parent?.text && <Tooltip title="See more"><ExpandMoreIcon /></Tooltip>}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"><Tooltip title="See the full post"><Typography sx={{display: "flex"}}>Full Post <span style={{display: "flex", alignItems: "baseline", paddingLeft: "0.4rem"}}><PreviewIcon/></span></Typography></Tooltip></AccordionSummary>
-                  <AccordionDetails>
-                    <Typography paragraph dangerouslySetInnerHTML={{ __html: parent?.text}} />
-                  </AccordionDetails>
-                </Accordion>}
+                    <CardHeader
+                        avatar={
+                        <Avatar {...stringAvatar(parent?.fields?.by)} />
+                        }
+                        title={parent?.fields?.by}
+                        subheader={new Date(parent?.fields?.time * 1000)?.toDateString()}
+                    />
+                    <CardContent>
+                        <Typography variant="body2" color="text.secondary" dangerouslySetInnerHTML={{ __html: parent?.fields?.title}} />
+                    </CardContent>
+                    <CardActions disableSpacing>
+                        <FavoriteIcon  sx={{color: "crimson"}}/> <Typography>{parent?.fields?.score}</Typography>
+                        <CommentIcon /> <Typography>{comments?.length}</Typography>
+                    </CardActions>
+                    {parent?.fields?.text && 
+                    <Accordion>
+                    <AccordionSummary
+                        expandIcon={parent?.fields?.text && <Tooltip title="See more"><ExpandMoreIcon /></Tooltip>}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"><Tooltip title="See the full post"><Typography sx={{display: "flex"}}>Full Post <span style={{display: "flex", alignItems: "baseline", paddingLeft: "0.4rem"}}><PreviewIcon/></span></Typography></Tooltip></AccordionSummary>
+                    <AccordionDetails>
+                        <Typography paragraph dangerouslySetInnerHTML={{ __html: parent?.fields?.text}} />
+                    </AccordionDetails>
+                    </Accordion>}
                 </Card>
                 <div className={styles.addComment}>
                     <Typography sx={{textAlign: "center"}}>Comments {comments?.length}</Typography>
-                    <Tooltip title="Add comment">
-                        <IconButton
-                        onClick={handleDisplay}>
-                            <AddCommentIcon />
-                        </IconButton>
-                    </Tooltip>
+                    <Typography>{filteredComments} filtered comments</Typography>
                 </div>
-                <Box
-                component="form"
-                sx={{
-                    '& .MuiTextField-root': { m: 1 },
-                    maxWidth: "500px",
-                    display: displayCommentField ? "flex" : "none",
-                    margin: "auto",
-                }}
-                autoComplete="off"
-                >
-                    <TextField
-                    required
-                    id="outlined-multiline-static"
-                    label="Comment"
-                    variant="filled"
-                    multiline
-                    placeholder="Post a comment"
-                    sx={{
-                        width: "100%",
-                    }}
-                    />
-                </Box>
-            {comments.map((i, index) => (
+                {comments.map((i, index) => (
                 <Card 
                 sx={{margin: "auto", marginTop: "1rem", borderRadius: "10px", maxWidth: "500px"}} 
                 key={index}>

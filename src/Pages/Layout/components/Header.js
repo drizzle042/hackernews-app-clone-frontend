@@ -83,7 +83,7 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-      { localStorage.getItem("news-app-authToken") === "null" ?
+      { localStorage.getItem("news-app-authToken") === "" || {} ?
         <Link to={"/signin"}>
           <MenuItem>
             <ListItemIcon>
@@ -103,7 +103,7 @@ export default function AccountMenu() {
           <Divider />
           <MenuItem
             onClick={() => {
-              localStorage.setItem("news-app-authToken", "null")
+              localStorage.setItem("news-app-authToken", "")
             }}>
             <ListItemIcon>
               <Logout fontSize="small" />

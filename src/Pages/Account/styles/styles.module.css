@@ -9,3 +9,10 @@
     display: flex;
     justify-content: center;
 }
+@media only screen and (max-width: 600px){
+    .row{
+        display: flex;
+        flex-flow: column;
+        justify-content: space-between;
+    }
+}

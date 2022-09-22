@@ -85,7 +85,7 @@ const Account = () => {
                     <div className={styles.form}>
                         <div className={styles.row}>
                             <TextField
-                            id="filled-required"
+                            required
                             label="First Name"
                             variant="outlined"
                             placeholder="Your First Name"
@@ -100,7 +100,7 @@ const Account = () => {
                             }}
                             />
                             <TextField
-                            id="outlined-multiline-static"
+                            required
                             label="Last Name"
                             variant="outlined"
                             multiline
@@ -118,7 +118,7 @@ const Account = () => {
                         </div>
                         <div className={styles.row}>
                             <TextField
-                            id="filled-required"
+                            required
                             label="Email"
                             type={"email"}
                             variant="outlined"
@@ -134,7 +134,7 @@ const Account = () => {
                             }}
                             />
                             <TextField
-                            id="filled-required"
+                            required
                             label="Password"
                             type={showPassword ? "text" : "password"}
                             variant="outlined"

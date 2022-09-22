@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, forwardRef, useRef } from "react";
 import { Link } from "react-router-dom";
 import Layout from "../Layout/Layout";
 import styles from "./styles/styles.module.css";
@@ -15,13 +15,17 @@ import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import Pagination from "@mui/material/Pagination"
 import Skeleton from '@mui/material/Skeleton';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import CommentIcon from '@mui/icons-material/Comment';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import PreviewIcon from '@mui/icons-material/Preview';
 import useFetch from "../../Lib/Hooks/useFetch";
 import Search from "./components/Search";
 import FetchError from "../../Lib/Hooks/FetchError";
+import usePost from "../../Lib/Hooks/usePost";
 
 
 const MyPosts = () => {
@@ -75,17 +79,48 @@ const MyPosts = () => {
             };
         }
     }
+  
+    const Alert = forwardRef(function Alert(props, ref) {
+        return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+    });
+    
+    const [openSnackBar, setOpenSnackBar] = useState(false);
+
+    const handleOpenSnackBar = () => {
+        if (openSnackBar){
+            return;
+        }
+        setOpenSnackBar(true);
+    };
+
+    const handleClose = () => {
+        setOpenSnackBar(false);
+    };
+
+    // Requests
+    const {data, handleSearchInput, isLoading, error, paginator, normalFetch} = useFetch(`api/v0/myarticles?limit=10`);
 
     const [page, setPage] = useState(1);
     const handleChangePage = (e, value) => {
       setPage(value);
     }
 
-    // Requests
-    const {data, handleSearchInput, isLoading, error, paginator} = useFetch(`api/v0/myarticles?limit=10`);
-
     // eslint-disable-next-line
     useEffect(() => paginator(page), [page])
+
+    const {handleDelete, error: deleteMessageError, data: deleteMessage} = usePost(`api/v0/myarticles/`);
+    
+    const isMounted = useRef(false);
+
+    useEffect(() => {
+        if (isMounted.current){
+            handleOpenSnackBar()
+            normalFetch(`api/v0/myarticles/`);
+        }
+        isMounted.current = true;
+    // eslint-disable-next-line
+    }, [deleteMessageError, deleteMessage])
+
 
     return ( 
         <Layout>
@@ -101,7 +136,7 @@ const MyPosts = () => {
                     avatar={
                     <Avatar {...stringAvatar("me")} />
                     }
-                    title={"by me"}
+                    title={`By me (${story?.fields?.by})`}
                     subheader={new Date(story?.fields?.time)?.toDateString()}
                 />
                 <CardContent>
@@ -118,6 +153,13 @@ const MyPosts = () => {
                             <CommentIcon />
                       </Link>
                     </IconButton></Tooltip> <Typography>{story?.fields?.kids?.length}</Typography>
+                    <IconButton 
+                    aria-label="delete forever"
+                    onClick={() => {
+                      handleDelete(story?.pk)
+                    }}>
+                        <DeleteForeverIcon />
+                    </IconButton>
                 </CardActions>
               { story?.fields?.text && 
                 <Accordion>
@@ -131,6 +173,11 @@ const MyPosts = () => {
                 </Accordion>}
               </Card>
           )})}
+          <Snackbar open={openSnackBar} autoHideDuration={6000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity={deleteMessageError ? "error" : "success"} sx={{ width: '100%' }}>
+              {deleteMessage?.message}
+              </Alert>
+          </Snackbar>
           <div className={styles.pagination}>
               <Pagination count={data?.totalPages} shape="rounded" page={page} onChange={handleChangePage} />
           </div>

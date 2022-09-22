@@ -89,7 +89,6 @@ const Publish = () => {
                         <div className={styles.row}>
                             <TextField
                             required
-                            id="filled-required"
                             label="Title"
                             variant="filled"
                             placeholder="Add a title to your article"
@@ -106,7 +105,6 @@ const Publish = () => {
                         </div>
                         <div className={styles.row}>
                             <TextField
-                            id="outlined-multiline-static"
                             label="Article"
                             variant="filled"
                             multiline
@@ -125,7 +123,6 @@ const Publish = () => {
                         </div>
                         <div className={styles.row}>
                             <TextField
-                            id="filled-required"
                             label="url"
                             placeholder="Add a reference to your story."
                             sx={{
@@ -139,34 +136,36 @@ const Publish = () => {
                                 })
                             }}
                             />
-                            <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
-                            <InputLabel id="demo-select-small">
-                                <Typography sx={{ minWidth: 100 }}>Story Type</Typography>
-                            </InputLabel>
-                            <Select
-                                labelId="demo-select-small"
-                                id="demo-select-small"
-                                value={story}
-                                label="Set your story type"
-                                onChange={handleSelect}
-                            >
-                                <MenuItem value="ask">Question</MenuItem>
-                                <MenuItem value="story">Article</MenuItem>
-                                <MenuItem value="job">Job Posting</MenuItem>
-                                <MenuItem value="show">Show a Rare Topic</MenuItem>
-                            </Select>
-                            </FormControl>
-                            <Button 
-                            variant="contained" 
-                            type="submit"
-                            size="large"
-                            sx={{
-                                minWidth: 120,
-                                margin: "auto"
-                            }}
-                            endIcon={<PostAddIcon />}>
-                                <Typography>Submit</Typography>
-                            </Button>
+                            <div className={styles.flex}>
+                                <FormControl sx={{ m: 1, minWidth: 120 }} size="small">
+                                <InputLabel id="demo-select-small">
+                                    <Typography sx={{ minWidth: 100 }}>Story Type</Typography>
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-select-small"
+                                    id="demo-select-small"
+                                    value={story}
+                                    label="Set your story type"
+                                    onChange={handleSelect}
+                                >
+                                    <MenuItem value="ask">Question</MenuItem>
+                                    <MenuItem value="story">Article</MenuItem>
+                                    <MenuItem value="job">Job Posting</MenuItem>
+                                    <MenuItem value="show">Show a Rare Topic</MenuItem>
+                                </Select>
+                                </FormControl>
+                                <Button 
+                                variant="contained" 
+                                type="submit"
+                                size="large"
+                                sx={{
+                                    minWidth: 120,
+                                    marginLeft: "auto"
+                                }}
+                                endIcon={<PostAddIcon />}>
+                                    <Typography>Submit</Typography>
+                                </Button>
+                            </div>
                         </div>
                     </div>
                 </Box>

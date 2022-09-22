@@ -98,8 +98,40 @@ const usePost = (url) => {
             }
         })
     };
+    
+    function handleDelete(id){
+        const payload = {
+            id: id
+        }
+        fetch(full_url, {
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer " + tokens
+        },
+        body: JSON.stringify(payload)
+        })
+        .then((response) => {
+            if (response.ok){
+                let promise = response.json()
+                promise
+                    .then((resObj) => {
+                        setIsLoading(false);
+                        setError(false)
+                        setData(resObj);
+                        })
+            } else {
+                let promise = response.json()
+                promise
+                    .then((resObj) => {
+                        setIsLoading(false);
+                        setError(true)
+                        setData(resObj);
+                    })
+            }
+        })
+    };
 
-    return {data, isLoading, error, setData,  handleAuth, handlePut, handlePost};
+    return {data, isLoading, error, setData,  handleAuth, handlePut, handlePost, handleDelete};
 }
  
 export default usePost;

@@ -76,16 +76,20 @@ const Home = () => {
           }
     }
 
-    const [page, setPage] = useState(1);
-    const handleChangePage = (e, value) => {
-      setPage(value);
-    }
 
     // Requests
     const {data, handleSearchInput, isLoading, error, paginator} = useFetch(`api/v0/articles?&limit=10`);
+    
+    const [page, setPage] = useState(1);
 
+    const handleChangePage = (e, value) => {
+      setPage(value)
+    }
+
+    useEffect(() => {
+      paginator(page)
     // eslint-disable-next-line
-    useEffect(() => paginator(page), [page])
+    }, [page])
 
     return ( 
         <Layout>
@@ -99,9 +103,9 @@ const Home = () => {
                 key={index}>
                 <CardHeader
                     avatar={
-                    <Avatar {...stringAvatar(typeof(story?.fields?.by) === "number" ? "me" : story?.fields?.by)} />
+                    <Avatar {...stringAvatar(story?.fields?.by)} />
                     }
-                    title={typeof(story?.fields?.by) === "number" ? "by me" : story?.fields?.by}
+                    title={story?.fields?.by}
                     subheader={new Date(story?.fields?.time)?.toDateString()}
                 />
                 <CardContent>
@@ -132,7 +136,7 @@ const Home = () => {
               </Card>
           )})}
           <div className={styles.pagination}>
-              <Pagination count={data?.totalPages} shape="rounded" page={page} onChange={handleChangePage} />
+              <Pagination count={data?.totalPages} page={page} shape="rounded" onChange={handleChangePage} />
           </div>
         </Layout>
      );
