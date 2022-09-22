@@ -57,7 +57,7 @@ const Publish = () => {
         setStory(e?.target?.value);
         setFormData({
             ...formData,
-            "type": story
+            "type": e?.target?.value
         })
     };
 

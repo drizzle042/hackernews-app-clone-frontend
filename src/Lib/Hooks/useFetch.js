@@ -45,6 +45,7 @@ const useFetch = (url) => {
 
   function paginator(page){
     let paginatedUrl = `${endpoint}&page=${page}`
+    setEndpoint(`${endpoint}&page=${page}`);
     fetch(paginatedUrl, {
       method: "GET",
       headers: {
@@ -79,10 +80,12 @@ const useFetch = (url) => {
   };
   
   function handleSearchInput(value){
+    let searchUrl = `${process.env.REACT_APP_BACKEND_API_URL}${url}`;
     for (var key of Object.keys(value)){
+      searchUrl = searchUrl.concat("&", key, "=", value[key]);
       setEndpoint(endpoint.concat("&", key, "=", value[key]));
     }
-    fetch(endpoint, {
+    fetch(searchUrl, {
       method: "GET",
       headers: {
         "Authorization": "Bearer " + tokens

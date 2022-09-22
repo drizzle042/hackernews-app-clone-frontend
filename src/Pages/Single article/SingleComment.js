@@ -9,7 +9,13 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Avatar from '@mui/material/Avatar';
 import Skeleton from '@mui/material/Skeleton';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
 import IconButton from '@mui/material/IconButton';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import PreviewIcon from '@mui/icons-material/Preview';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import Typography from '@mui/material/Typography';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -73,10 +79,10 @@ const SingleComment = () => {
 
     // Requests
     const {data, isLoading, error} = useFetch(`api/v0/comments?commentid=${id}`);
-    const parent = data?.data?.parent;
-    let allComments = data?.data?.comments;
+    const parent = !data?.data?.parent[0]?.deleted ? data?.data?.parent[0] : null
+    const allComments = data?.data?.comments;
     const comments = allComments?.filter((i) => !i?.dead && !i?.deleted);
-    const filteredComments = allComments.length - comments.length
+    const filteredComments = allComments?.length - comments?.length
 
 
     return ( 
@@ -94,6 +100,35 @@ const SingleComment = () => {
                         <KeyboardBackspaceIcon />
                     </IconButton>
                 </div>
+                {parent && parent?.fields ? 
+                <Card 
+                sx={{margin: "auto", marginTop: "1rem", borderRadius: "10px", maxWidth: "500px"}}>
+                    <CardHeader
+                        avatar={
+                        <Avatar {...stringAvatar(parent?.fields?.by)} />
+                        }
+                        title={parent?.fields?.by}
+                        subheader={new Date(parent?.fields?.time)?.toDateString()}
+                    />
+                    <CardContent>
+                        <Typography variant="body2" color="text.secondary" dangerouslySetInnerHTML={{ __html: parent?.fields?.title}} />
+                    </CardContent>
+                    <CardActions disableSpacing>
+                        <IconButton><FavoriteIcon  sx={{color: "crimson"}}/> <Typography>{parent?.fields?.score}</Typography></IconButton>
+                        <IconButton><CommentIcon /> <Typography>{comments?.length}</Typography></IconButton>
+                    </CardActions>
+                    {parent?.fields?.text && 
+                    <Accordion>
+                    <AccordionSummary
+                        expandIcon={parent?.fields?.text && <Tooltip title="See more"><ExpandMoreIcon /></Tooltip>}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"><Tooltip title="See the full post"><Typography sx={{display: "flex"}}>Full Post <span style={{display: "flex", alignItems: "baseline", paddingLeft: "0.4rem"}}><PreviewIcon/></span></Typography></Tooltip></AccordionSummary>
+                    <AccordionDetails>
+                        <Typography paragraph dangerouslySetInnerHTML={{ __html: parent?.fields?.text}} />
+                    </AccordionDetails>
+                    </Accordion>}
+                </Card> :
+                parent ?
                 <Card 
                 sx={{margin: "auto", marginTop: "1rem", borderRadius: "10px", maxWidth: "500px"}} 
                 >
@@ -108,13 +143,17 @@ const SingleComment = () => {
                         <Typography variant="body2" color="text.secondary" dangerouslySetInnerHTML={{ __html: parent?.text}} />
                     </CardContent>
                     <CardActions disableSpacing>
-                            <CommentIcon /> <Typography>{comments?.length}</Typography>
+                        <IconButton><FavoriteIcon  sx={{color: "crimson"}}/> <Typography>{parent?.score}</Typography></IconButton>
+                        <IconButton><CommentIcon /> <Typography>{comments?.length}</Typography></IconButton>
                     </CardActions>
-                </Card>
+                </Card> :
+                <Typography sx={{textAlign: "center"}}>This post has been deleted.</Typography>}
+                {parent &&
                 <div className={styles.addComment}>
                     <Typography sx={{textAlign: "center"}}>Comments {comments?.length}</Typography>
-                    <Typography>{filteredComments} filtered comments</Typography>
-                </div>
+                    <Typography>Filtered comments {filteredComments}</Typography>
+                    <Typography>While the rest were deleted.</Typography>
+                </div>}
                 {comments.map((i, index) => (
                 <Card 
                 sx={{margin: "auto", marginTop: "1rem", borderRadius: "10px", maxWidth: "500px"}} 

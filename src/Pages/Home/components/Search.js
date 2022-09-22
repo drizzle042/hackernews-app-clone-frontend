@@ -23,8 +23,12 @@ const Search = ({handleSearchInput, buttonText, link}) => {
         ...searchValue,
         keyword: e?.target?.value
         })
-      handleSearchInput(searchValue)
     }
+
+    useEffect(() => {
+        handleSearchInput(searchValue)
+        // eslint-disable-next-line
+    }, [searchValue])
 
     const [storyType, setStoryType] = useState('all');
     function handleSelect(e){
