@@ -98,7 +98,7 @@ const MyPosts = () => {
     };
 
     // Requests
-    const {data, handleSearchInput, isLoading, error, paginator, normalFetch} = useFetch(`api/v0/myarticles?limit=10`);
+    const {data, handleSearchInput, isLoading, error, paginator, normalFetch} = useFetch(`api/v0/myarticles/?limit=10`);
 
     const [page, setPage] = useState(1);
     const handleChangePage = (e, value) => {
